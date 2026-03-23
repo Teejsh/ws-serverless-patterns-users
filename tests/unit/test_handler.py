@@ -29,9 +29,7 @@ def my_test_environment():
         yield
 
 def set_up_dynamodb():
-    conn = boto3.client(
-        'dynamodb'
-    )
+    conn = boto3.client('dynamodb', region_name=region_name)
     conn.create_table(
         TableName=USERS_MOCK_TABLE_NAME,
         KeySchema=[
@@ -47,9 +45,7 @@ def set_up_dynamodb():
     )
 
 def put_data_dynamodb():
-    conn = boto3.client(
-        'dynamodb'
-    )
+    conn = boto3.client('dynamodb', region_name=region_name)
     conn.put_item(
         TableName=USERS_MOCK_TABLE_NAME,
         Item={
@@ -67,7 +63,7 @@ def put_data_dynamodb():
         }
     )
 
-@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR'})
+@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR', 'AWS_DEFAULT_REGION': region_name})
 def test_get_list_of_users():
     with my_test_environment():
         from src.api import users
@@ -90,6 +86,7 @@ def test_get_list_of_users():
         data = json.loads(ret['body'])
         assert data == expected_response
 
+@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR', 'AWS_DEFAULT_REGION': region_name})
 def test_get_single_user():
     with my_test_environment():
         from src.api import users
@@ -105,6 +102,7 @@ def test_get_single_user():
         data = json.loads(ret['body'])
         assert data == expected_response
 
+@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR', 'AWS_DEFAULT_REGION': region_name})
 def test_get_single_user_wrong_id():
     with my_test_environment():
         from src.api import users
@@ -116,6 +114,7 @@ def test_get_single_user_wrong_id():
         assert ret['statusCode'] == 200
         assert json.loads(ret['body']) == {}
 
+@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR', 'AWS_DEFAULT_REGION': region_name})
 @patch('uuid.uuid1', mock_uuid)
 @pytest.mark.freeze_time('2001-01-01')
 def test_add_user():
@@ -131,6 +130,7 @@ def test_add_user():
         assert data['timestamp'] == '2001-01-01T00:00:00'
         assert data['name'] == expected_response['name']
 
+@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR', 'AWS_DEFAULT_REGION': region_name})
 @pytest.mark.freeze_time('2001-01-01')
 def test_add_user_with_id():
     with my_test_environment():
@@ -146,6 +146,7 @@ def test_add_user_with_id():
         assert data['timestamp'] == '2001-01-01T00:00:00'
         assert data['name'] == expected_response['name']
 
+@patch.dict(os.environ, {'USERS_TABLE': USERS_MOCK_TABLE_NAME, 'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR', 'AWS_DEFAULT_REGION': region_name})
 def test_delete_user():
     with my_test_environment():
         from src.api import users
