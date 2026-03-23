@@ -202,14 +202,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Assume the testing pipeline user role
-      uses: aws-actions/configure-aws-credentials@v1-node16
-      with:
-        aws-region: ${{ env.TESTING_REGION }}
-        role-to-assume: ${{ env.TESTING_PIPELINE_EXECUTION_ROLE }}
-        role-session-name: testing-deployment
-        role-duration-seconds: 3600
-        role-skip-session-tagging: true
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-region: ${{ env.TESTING_REGION }}
+          role-to-assume: ${{ env.TESTING_PIPELINE_EXECUTION_ROLE }}
+          role-session-name: testing-deployment
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
       - run: |
           # trigger the integration tests here
           echo 'Running integration tests'
