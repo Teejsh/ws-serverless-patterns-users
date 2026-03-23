@@ -11,6 +11,7 @@ from datetime import datetime
 USERS_TABLE = os.getenv('USERS_TABLE', None)
 dynamodb = boto3.resource('dynamodb')
 ddbTable = dynamodb.Table(USERS_TABLE)
+region_name = "eu-west-2"
 
 def lambda_handler(event, context):
     route_key = f"{event['httpMethod']} {event['resource']}"
