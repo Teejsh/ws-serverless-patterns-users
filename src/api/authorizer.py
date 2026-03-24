@@ -91,6 +91,7 @@ def lambda_handler(event, context):
     policy.allow_method(HttpVerb.GET, f"/users/{principal_id}/*")
     policy.allow_method(HttpVerb.PUT, f"/users/{principal_id}/*")
     policy.allow_method(HttpVerb.DELETE, f"/users/{principal_id}/*")
+    policy.allow_method(HttpVerb.POST, f"/users/{principal_id}/*")
 
     # Look for admin group in Cognito groups
     # Assumption: admin group always has higher precedence
@@ -99,6 +100,7 @@ def lambda_handler(event, context):
         policy.allow_method(HttpVerb.GET, "users/count")
         policy.allow_method(HttpVerb.GET, "users")
         policy.allow_method(HttpVerb.GET, "users/*")
+        policy.allow_method(HttpVerb.POST, "users")
         policy.allow_method(HttpVerb.DELETE, "users")
         policy.allow_method(HttpVerb.DELETE, "users/*")
         policy.allow_method(HttpVerb.PUT, "users")
